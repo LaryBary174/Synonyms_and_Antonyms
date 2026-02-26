@@ -1,0 +1,25 @@
+from fastapi import APIRouter, HTTPException, status, Depends
+
+from core.config import settings
+from services.ai_service import AIService
+from schemas.words_schemas import WordResponse,WordRequest
+
+
+router = APIRouter(prefix="/api/words", tags=["words"])
+
+def get_ai_service() -> AIService:
+    return AIService(credentials=settings.AI_CREDENTIALS)
+
+
+@router.post("/",response_model=WordResponse, status_code=status.HTTP_200_OK)
+def get_synonyms_and_antonyms(
+        word_request: WordRequest,
+        ai_service: AIService =Depends(get_ai_service)
+):
+    res = ai_service.get_words(word_request.word, word_request.type)
+    if not res.found:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Для слова {word_request.word} не найдено {word_request.type}ов"
+        )
+    return res
