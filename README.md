@@ -16,7 +16,7 @@ uv sync
 
 4. Запуск 
 ```
-uvicorn main:app --reload
+docker-compose up --build
 ```
 
 5. Документация
