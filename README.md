@@ -19,6 +19,6 @@ uv sync
 uvicorn main:app --reload
 ```
 
-5. Swagger
+5. Документация
     - http://localhost:8000/docs
     - http://localhost:8000/redoc
