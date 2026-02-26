@@ -1,4 +1,4 @@
-from typing import Literal, Dict
+from typing import Literal
 from langchain_gigachat import GigaChat
 from schemas.words_schemas import WordResponse
 

@@ -14,6 +14,11 @@ uv sync
 - AI_CREDENTIALS = "your_ai_api_key"
 - получить его возможно по [инструкции](https://developers.sber.ru/studio/workspaces/)
 
-4. Swagger
+4. Запуск 
+```
+uvicorn main:app --reload
+```
+
+5. Swagger
     - http://localhost:8000/docs
     - http://localhost:8000/redoc

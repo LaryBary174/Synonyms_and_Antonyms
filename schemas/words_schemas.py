@@ -9,7 +9,7 @@ class WordResponse(BaseModel):
     """Ответ со списком синонимов и антонимов для слова."""
     synonyms: list[str] = Field(description="Список синонимов")
     antonyms: list[str] = Field(description="Список антонимов")
-    found: bool = Field(description="Найдены ли слова")
+    found: bool = Field(description="Найдены ли слова ")
 
 class WordRequest(BaseModel):
     word: str = Field(min_length=1,description="Слово для поиска синонимов/антонимов")
