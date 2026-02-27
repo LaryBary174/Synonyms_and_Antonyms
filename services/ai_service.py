@@ -1,4 +1,4 @@
-from typing import Literal, TypedDict
+from typing import TypedDict
 from langchain_gigachat import GigaChat
 from langgraph.graph import StateGraph, START, END
 from schemas.words_schemas import WordResponse
@@ -6,7 +6,6 @@ from schemas.words_schemas import WordResponse
 
 class State(TypedDict):
     word: str
-    word_type: str
     result: WordResponse
 
 
@@ -26,29 +25,26 @@ class AIService:
 
     def _process_word(self, state: State) -> State:
         word = state["word"]
-        word_type = state["word_type"]
+
         structured_llm = self.llm.with_structured_output(WordResponse)
-        if word_type == "синоним":
-            prompt = (
-                f"Найди 10 синонимов для слова {word}. "
-                f"Заполни поле synonyms списком синонимов, а поле antonyms оставь пустым. "
-                f"Если синонимов не найдено, установи found в false и оставь synonyms пустым."
-            )
-        else:
-            prompt = (
-                f"Найди 10 антонимов для слова {word}. "
-                f"Заполни поле antonyms списком антонимов, а поле synonyms оставь пустым."
-                f"Если антонимов не найдено, установи found в false и оставь antonyms пустым."
-            )
+
+        prompt = (
+            f"ЗАДАЧА: Для слова '{word}' найди И синонимы И антонимы.\n\n"
+            f"ТРЕБОВАНИЯ:\n"
+            f"1. synonyms: список синонимов 10 вариантов\n"
+            f"2. antonyms: список антонимов 10 вариантов'\n"
+            f"3. found: true если найдено что-то из пунктов 1 или 2\n\n"
+            f"ВАЖНО: Обе части ОБЯЗАТЕЛЬНЫ к заполнению!\n\n"
+            f"ОБЯЗАТЕЛЬНО заполни И synonyms И antonyms (или пустые списки если нет).\n"
+        )
 
         res = structured_llm.invoke(prompt)
         state["result"] = res
         return state
 
     def get_words(
-        self, word: str, word_type: Literal["синоним", "антоним"]
+        self,
+        word: str,
     ) -> WordResponse:
-        res = self.state_graph.invoke(
-            {"word": word, "word_type": word_type, "result": None}
-        )
+        res = self.state_graph.invoke({"word": word, "result": None})
         return res["result"]

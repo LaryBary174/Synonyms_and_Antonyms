@@ -15,10 +15,10 @@ def get_ai_service(request: Request) -> AIService:
 def get_synonyms_and_antonyms(
     word_request: WordRequest, ai_service: AIService = Depends(get_ai_service)
 ):
-    res = ai_service.get_words(word_request.word, word_request.type)
+    res = ai_service.get_words(word_request.word)
     if not res.found:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Для слова {word_request.word} не найдено {word_request.type}ов",
+            detail=f"Для слова {word_request.word} не найдено синонимов и антонимов",
         )
     return res

@@ -1,5 +1,3 @@
-from typing import Literal
-
 from pydantic import BaseModel, Field, field_validator
 import re
 
@@ -14,9 +12,6 @@ class WordResponse(BaseModel):
 
 class WordRequest(BaseModel):
     word: str = Field(min_length=1, description="Слово для поиска синонимов/антонимов")
-    type: Literal["синоним", "антоним"] = Field(
-        description="Тип поиска: синоним или антоним"
-    )
 
     @field_validator("word")
     @classmethod
